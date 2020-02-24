@@ -1,0 +1,44 @@
+plugins {
+    id 'java'
+    id 'groovy'
+    id 'idea'
+    id 'application'
+}
+
+group 'com.github.markolya'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 11
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+}
+
+jar {
+    manifest {
+        attributes(
+                "Main-Class": "Main",
+                "Agent-Class": "Premain",
+                "Premain-Class": "Premain",
+                "Can-Redefine-Classes": true,
+                "Can-Retransform-Classes": true,
+        )
+    }
+}
+
+application {
+    mainClassName = 'Main'
+}
+
+run {
+    dependsOn jar
+    applicationDefaultJvmArgs = [
+            "-Xmx256M",
+            "-XX:FlightRecorderOptions=stackdepth=512",
+            "-javaagent:${jar.archiveFile.get()}"
+    ]
+}
